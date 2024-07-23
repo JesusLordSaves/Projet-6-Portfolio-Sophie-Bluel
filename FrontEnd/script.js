@@ -1,47 +1,70 @@
-console.log('Script chargé');
+document.addEventListener('DOMContentLoaded', () => {
+    const apiURL = 'http://localhost:5678/api/works';
+    const gallery = document.getElementById('gallery');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    let projects = [];
 
-// URL de l'API pour récupérer les travaux de l'architecte
-const apiURL = 'http://localhost:5678/api/works';
+    // Fonction pour créer et ajouter les projets à la galerie
+    function addProjectsToGallery(projectsToDisplay) {
+        gallery.innerHTML = '';
+        projectsToDisplay.forEach(project => {
+            const projectContainer = document.createElement('figure');
+            projectContainer.classList.add('gallery-item');
+            projectContainer.setAttribute('data-category', project.category);
 
-// Sélectionner l'élément de la galerie dans ton HTML
-const gallery = document.getElementById('gallery'); // Assure-toi que l'élément de la galerie a l'ID "gallery"
+            const projectImage = document.createElement('img');
+            projectImage.src = project.imageUrl;
+            projectImage.alt = project.title;
 
-// Fonction pour créer et ajouter les projets à la galerie
-function addProjectsToGallery(projects) {
-  // Vider la galerie existante
-  gallery.innerHTML = '';
+            const projectCaption = document.createElement('figcaption');
+            projectCaption.textContent = project.title;
 
-  // Parcourir chaque projet et créer des éléments HTML pour l'ajouter à la galerie
-  projects.forEach(project => {
-    // Créer un conteneur pour chaque projet
-    const projectContainer = document.createElement('figure');
+            projectContainer.appendChild(projectImage);
+            projectContainer.appendChild(projectCaption);
+            gallery.appendChild(projectContainer);
+        });
+    }
 
-    // Créer une image pour le projet
-    const projectImage = document.createElement('img');
-    projectImage.src = project.imageUrl; // Utiliser l'URL de l'image du projet
-    projectImage.alt = project.title; // Utiliser le titre du projet comme texte alternatif
+    // Fonction pour filtrer les projets
+    function filterProjects(category) {
+        if (category === 'all') {
+            addProjectsToGallery(projects);
+        } else {
+            const filteredProjects = projects.filter(project => project.category === category);
+            addProjectsToGallery(filteredProjects);
+        }
+    }
 
-    // Créer une légende pour le projet
-    const projectCaption = document.createElement('figcaption');
-    projectCaption.textContent = project.title;
+    // Récupérer les projets depuis l'API
+    fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
+            // Assigner les bonnes catégories aux projets
+            projects = data.map(project => {
+                if (project.title.includes('Abajour') || project.title.includes('Structures Thermopolis')) {
+                    project.category = 'objets';
+                } else if (project.title.includes('Appartement') || project.title.includes('Villa')) {
+                    project.category = 'appartements';
+                } else if (project.title.includes('Restaurant') || project.title.includes('Hotel') || project.title.includes('Bar')) {
+                    project.category = 'hotels-restaurants';
+                } else {
+                    project.category = 'other';
+                }
+                return project;
+            });
+            addProjectsToGallery(projects); // Afficher tous les projets par défaut
+        })
+        .catch(error => console.error('Error fetching projects:', error));
 
-    // Ajouter l'image et la légende au conteneur du projet
-    projectContainer.appendChild(projectImage);
-    projectContainer.appendChild(projectCaption);
+    // Ajouter des écouteurs d'événements aux boutons de filtre
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.getAttribute('data-category');
+            filterProjects(category);
 
-    // Ajouter le conteneur du projet à la galerie
-    gallery.appendChild(projectContainer);
-  });
-}
-
-// Utiliser fetch pour envoyer une demande à l'API
-fetch(apiURL)
-  .then(response => response.json()) // Convertir la réponse en format JSON
-  .then(data => {
-    console.log(data); // Afficher les données dans la console pour vérifier
-    // Ajouter les projets à la galerie
-    addProjectsToGallery(data);
-  })
-  .catch(error => {
-    console.error('Erreur lors de la récupération des travaux :', error);
-  });
+            // Mettre à jour le style des boutons de filtre pour indiquer quel bouton est actif
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        });
+    });
+});
