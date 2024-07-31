@@ -1,8 +1,21 @@
-# Portfolio-architecte-sophie-bluel
+# Backend API - Sophie Bluel
 
-Code du projet 6 d'intégrateur web.
+Ce repo contient le code backend de l'architecte Sophie Bluel. 
 
-## Information pour le lancer le code
+## Lancement du backend
 
- - Lancer le backend depuis votre terminal en suivant les instruction du fichier ReadMe.
- - Si vous désirez afficher le code du backend et du frontend, faites le dans 2 instances de VSCode différentes pour éviter tout problème
+Après avoir récupéré le REPO executez la commande `npm install` pour installer les dépendances du projet
+
+Une fois les dépendances installées lancez le projet avec la commande `npm start`
+
+Compte de test pour Sophie Bluel
+
+```
+email: sophie.bluel@test.tld
+
+password: S0phie 
+```
+Lien pour voir la
+[documentation Swagger](http://localhost:5678/api-docs/)
+
+Pour lire la documentation, utiliser Chrome ou Firefox
