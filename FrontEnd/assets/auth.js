@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
+
+
+    document.getElementById('email').value = 'sophie.bluel@test.tld';
+    document.getElementById('password').value = 'S0phie';
+
     loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        
+        event.preventDefault();  // Empêche le rechargement de la page
+
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -16,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
+
             if (response.ok) {
                 // Stocker le token dans le localStorage
                 localStorage.setItem('authToken', data.token);
