@@ -208,6 +208,10 @@ footer nav ul {
 	margin: 2em
 }
 
+#logout-link {
+    display: none;
+}
+
 .login-container {
 	display: flex ;
 	align-items: center;
@@ -268,4 +272,5 @@ footer nav ul {
     margin-top: 10px;
     color: #1D6154;
 }
+
 
