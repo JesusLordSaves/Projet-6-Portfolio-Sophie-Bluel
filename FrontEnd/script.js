@@ -68,6 +68,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Vérifier le statut de connexion lorsque l'utilisateur arrive sur la page d'accueil
+    const checkLoginStatus = () => {
+        const loginLink = document.getElementById('login-link');
+        const logoutLink = document.getElementById('logout-link');
+        const token = localStorage.getItem('authToken');
+
+        console.log('Token:', token); // Vérifiez si le token est correct
+
+        if (token) {
+            loginLink.style.display = 'none';
+            logoutLink.style.display = 'block';
+            console.log('Utilisateur connecté, affichage de logout.');
+        } else {
+            loginLink.style.display = 'block'; 
+            logoutLink.style.display = 'none' ;
+            console.log('Utilisateur non connecté, affichage de login.');
+        }
+    };
+
+    // Appeler cette fonction seulement sur la page d'accueil
+    if (window.location.pathname.includes('index.html')) {
+        checkLoginStatus();
+    }
+
+    // Gestion de la déconnexion
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            localStorage.removeItem('authToken');
+            checkLoginStatus(); // Re-vérifier le statut après déconnexion
+            window.location.href = 'index.html';  // Rediriger vers la page d'accueil après déconnexion
+        });
+    }
+
     // Code pour gérer les modales
     const penIcon = document.querySelector('.fa-pen-to-square');
     const galleryModal = document.getElementById('galleryModal');
@@ -122,6 +157,22 @@ document.addEventListener('DOMContentLoaded', () => {
             modalGallery.appendChild(imgContainer);
         });
     }
+
+     // Affichage de l'image sélectionnée dans la modale
+     const photoFileInput = document.getElementById('photoFile');
+     const imagePreview = document.getElementById('imagePreview');
+ 
+     photoFileInput.addEventListener('change', (event) => {
+         const file = event.target.files[0];
+         if (file) {
+             const reader = new FileReader();
+             reader.onload = (e) => {
+                 imagePreview.src = e.target.result;
+                 imagePreview.style.display = 'block'; // Affiche l'image
+             };
+             reader.readAsDataURL(file); // Lire le fichier pour en faire un affichage de données URL
+         }
+     });
 
     // Fermer la modale en cliquant en dehors du contenu
     window.addEventListener('click', (event) => {

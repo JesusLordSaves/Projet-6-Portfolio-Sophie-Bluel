@@ -151,14 +151,14 @@ li:hover {
 
 .fa-regular {
 	color: black;
-	padding-top: 10px;
+	padding-top: 30px;
 	padding-left: 10px;
 	cursor: pointer;
 }
 
 .modifier-txt {
 	padding-left: 10px;
-	padding-top: 10px;
+	padding-top: 30px;
 }
 
 
@@ -375,19 +375,18 @@ select {
 
 
 
-button {
+.filter-btn {
     margin-top: 20px;
     padding: 10px 20px;
-    border: none;
     cursor: pointer;
-	border-color: #1D6154;
-	text-decoration: #1D6154 ;
+	border: #1D6154 1.5px solid;
+	color: #1D6154 ;
 	background-color: white;
 }
 
-button:hover {
+.filter-btn:hover {
     background-color: #1D6154;
-
+	color: white;
 }
 
 #contact {

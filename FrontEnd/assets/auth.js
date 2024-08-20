@@ -1,17 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
 
-    // Pré-remplir les champs email et mot de passe pour le test
-    document.getElementById('email').value = 'sophie.bluel@test.tld';
-    document.getElementById('password').value = 'S0phie';
 
     // Gestion de la soumission du formulaire de connexion
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();  // Empêche le rechargement de la page
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value = 'sophie.bluel@test.tld';
+            const password = document.getElementById('password').value = 'S0phie';
 
             try {
                 const response = await fetch('http://localhost:5678/api/users/login', {
@@ -44,29 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Vérifier le statut de connexion lorsque l'utilisateur arrive sur la page d'accueil
-    const checkLoginStatus = () => {
-        const loginLink = document.getElementById('login-link');
-        const logoutLink = document.getElementById('logout-link');
-        const token = localStorage.getItem('authToken');
+  
 
-        console.log('Token:', token); // Vérifiez si le token est correct
-
-        if (token) {
-            loginLink.style.display = 'none';
-            logoutLink.style.display = 'block';
-            console.log('Utilisateur connecté, affichage de logout.');
-        } else {
-            loginLink.style.display = 'block';
-            logoutLink.style.display = 'none';
-            console.log('Utilisateur non connecté, affichage de login.');
-        }
-    };
-
-    // Appeler cette fonction seulement sur la page d'accueil
-    if (window.location.pathname.includes('index.html')) {
-        checkLoginStatus();
-    }
 
     // Gestion de la déconnexion
     const logoutButton = document.getElementById('logout-button');
