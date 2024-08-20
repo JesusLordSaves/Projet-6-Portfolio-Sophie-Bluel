@@ -67,4 +67,67 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
         });
     });
+
+    // Code pour gérer les modales
+    const penIcon = document.querySelector('.fa-pen-to-square');
+    const galleryModal = document.getElementById('galleryModal');
+    const addPhotoModal = document.getElementById('addPhotoModal');
+    const closeButtons = document.querySelectorAll('.close');
+    const addPhotoBtn = document.getElementById('addPhotoBtn');
+    const modalGallery = document.querySelector('.modal-gallery');
+    const backToGallery = document.getElementById('backToGallery');  // Flèche de retour
+
+    // Ouvrir la première modale lorsque l'icône est cliquée
+    penIcon.addEventListener('click', () => {
+        galleryModal.style.display = 'block';
+        loadGalleryToModal();
+    });
+
+    // Fermer les modales
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            galleryModal.style.display = 'none';
+            addPhotoModal.style.display = 'none';
+        });
+    });
+
+    // Ouvrir la seconde modale
+    addPhotoBtn.addEventListener('click', () => {
+        galleryModal.style.display = 'none';
+        addPhotoModal.style.display = 'block';
+    });
+
+    // Retour à la première modale lors du clic sur la flèche de retour
+    backToGallery.addEventListener('click', () => {
+        addPhotoModal.style.display = 'none';
+        galleryModal.style.display = 'block';
+    });
+
+    // Charger les images de la galerie dans la modale
+    function loadGalleryToModal() {
+        modalGallery.innerHTML = '';
+        const images = gallery.querySelectorAll('img');
+        images.forEach(img => {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('modal-gallery-item');
+    
+            const imgClone = img.cloneNode();
+            imgContainer.appendChild(imgClone);
+    
+            const deleteIcon = document.createElement('span');
+            deleteIcon.innerHTML = '<i class="fa fa-trash"></i>'; // Utilisez l'icône de poubelle de FontAwesome
+            deleteIcon.classList.add('delete-icon');
+            imgContainer.appendChild(deleteIcon);
+    
+            modalGallery.appendChild(imgContainer);
+        });
+    }
+
+    // Fermer la modale en cliquant en dehors du contenu
+    window.addEventListener('click', (event) => {
+        if (event.target === galleryModal || event.target === addPhotoModal) {
+            galleryModal.style.display = 'none';
+            addPhotoModal.style.display = 'none';
+        }
+    });
 });
