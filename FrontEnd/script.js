@@ -165,14 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
      photoFileInput.addEventListener('change', (event) => {
          const file = event.target.files[0];
          if (file) {
-             const reader = new FileReader();
-             reader.onload = (e) => {
+
+            const reader = new FileReader();
+             reader.onload = function(e) {
                  imagePreview.src = e.target.result;
-                 imagePreview.style.display = 'block'; // Affiche l'image
-             };
-             reader.readAsDataURL(file); // Lire le fichier pour en faire un affichage de données URL
+                 imagePreview.style.display = 'block';join
+             }
+             reader.readAsDataURL(file);
+         } else {
+             imagePreview.style.display = 'none';
+             imagePreview.src = '#';
          }
      });
+
 
     // Fermer la modale en cliquant en dehors du contenu
     window.addEventListener('click', (event) => {
@@ -181,4 +186,92 @@ document.addEventListener('DOMContentLoaded', () => {
             addPhotoModal.style.display = 'none';
         }
     });
+
+    // Gérer la suppression d'un projet
+    document.querySelector('.modal-gallery').addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-icon')) {
+            const projectElement = event.target.closest('.modal-gallery-item');
+            const projectId = projectElement.dataset.projectId; // Assurez-vous que chaque élément a un data-project-id
+
+            // Confirmer la suppression avec l'utilisateur
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
+                deleteProject(projectId, projectElement);
+            }
+        }
+    });
+
+
+    // Fonction pour supprimer le projet
+    function deleteProject(projectId, projectElement) {
+        fetch(`http://localhost:5678/api/works/${projectId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Supprimer l'élément du DOM après suppression
+                projectElement.remove();
+                alert('Projet supprimé avec succès.');
+            } else {
+                alert('Une erreur est survenue lors de la suppression.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Impossible de supprimer le projet.');
+        });
+    }
+
+   // Gestion de l'ajout de projet
+const addPhotoForm = document.getElementById('addPhotoForm');
+
+addPhotoForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(addPhotoForm);
+    const photoFile = formData.get('photoFile'); // Assurez-vous que l'input pour l'image a bien name="photoFile"
+    const photoTitle = formData.get('photoTitle').trim();
+    const photoCategory = formData.get('photoCategory');
+
+    console.log('Photo File:', photoFile); // Pour vérifier que l'image est bien sélectionnée
+    console.log('Photo Title:', photoTitle); // Pour vérifier que le titre est bien récupéré
+    console.log('Photo Category:', photoCategory); // Pour vérifier que la catégorie est bien récupérée
+
+    // Validation basique
+    if (!photoFile || !photoTitle || !photoCategory) {
+        alert('Veuillez remplir tous les champs et sélectionner une image.');
+        return;
+    }
+
+    // Envoi des données au serveur
+    fetch('http://localhost:5678/api/works', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status); // Ajout du status de la réponse pour debug
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Une erreur est survenue lors de l\'envoi du projet.');
+        }
+    })
+    .then(data => {
+        console.log('Projet ajouté:', data); // Log pour vérifier que le projet est bien ajouté
+        // Ajouter le nouveau projet à la galerie sans recharger la page
+        addProjectsToGallery([data]);
+        addPhotoModal.style.display = 'none';
+        alert('Projet ajouté avec succès.');
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Impossible d\'ajouter le projet.');
+    });
+});
 });

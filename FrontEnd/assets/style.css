@@ -175,6 +175,13 @@ li:hover {
 
 }
 
+.image-preview {
+    display: none; /* Cacher l'image par défaut */
+    max-width: 100%; /* S'assurer que l'image ne dépasse pas le conteneur */
+    height: auto; /* Conserver les proportions de l'image */
+    margin-bottom: 10px; /* Espacement en bas de l'image */
+}
+
 /* Style de la modale */
 .modal {
     display: none;
@@ -220,6 +227,7 @@ li:hover {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover,
