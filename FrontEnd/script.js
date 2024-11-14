@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Gestion de la déconnexion
-    const logoutButton = document.getElementById('logout-button');
+    const logoutButton = document.getElementById('logout-link');
     if (logoutButton) {
         logoutButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -164,12 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
  
      photoFileInput.addEventListener('change', (event) => {
          const file = event.target.files[0];
-         if (file) {
+         if (file) { 
+            
 
             const reader = new FileReader();
              reader.onload = function(e) {
                  imagePreview.src = e.target.result;
-                 imagePreview.style.display = 'block';join
+                 imagePreview.style.display = 'block';
              }
              reader.readAsDataURL(file);
          } else {
@@ -232,7 +233,7 @@ addPhotoForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(addPhotoForm);
-    const photoFile = formData.get('photoFile'); // Assurez-vous que l'input pour l'image a bien name="photoFile"
+    const photoFile = formData.get('image'); // Le nom ici doit être 'image' pour correspondre au backend
     const photoTitle = formData.get('photoTitle').trim();
     const photoCategory = formData.get('photoCategory');
 
